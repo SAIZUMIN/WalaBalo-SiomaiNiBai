@@ -4,12 +4,21 @@ import { DiningOptionPage } from './components/DiningOptionPage';
 import { LoginPage } from './components/LoginPage';
 import { ProfilePage } from './components/ProfilePage';
 import { OrderHistoryPage } from './components/OrderHistoryPage';
-import { DiningOption, ScreenName } from './types';
+import { MainMenuPage } from './components/MainMenuPage';
+import { CartPage } from './components/CartPage';
+import {
+  CartItem,
+  DiningOption,
+  INITIAL_CART_ITEMS,
+  MenuItem,
+  ScreenName,
+} from './types';
 import './App.css';
 
 export const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenName>('welcome');
   const [diningOption, setDiningOption] = useState<DiningOption>(null);
+  const [cart, setCart] = useState<CartItem[]>(INITIAL_CART_ITEMS);
 
   const handleStartOrder = () => {
     setCurrentScreen('dining');
@@ -25,8 +34,37 @@ export const App: React.FC = () => {
   };
 
   const handleSkipSignIn = () => {
-    setCurrentScreen('welcome');
-    setDiningOption(null);
+    setCurrentScreen('menu');
+  };
+
+  const handleAddToCart = (item: MenuItem) => {
+    setCart((prev) => {
+      const existing = prev.find((entry) => entry.item.id === item.id);
+      if (existing) {
+        return prev.map((entry) =>
+          entry.item.id === item.id
+            ? { ...entry, quantity: entry.quantity + 1 }
+            : entry
+        );
+      }
+      return [...prev, { item, quantity: 1 }];
+    });
+  };
+
+  const handleUpdateQuantity = (itemId: string, delta: number) => {
+    setCart((prev) =>
+      prev
+        .map((entry) =>
+          entry.item.id === itemId
+            ? { ...entry, quantity: entry.quantity + delta }
+            : entry
+        )
+        .filter((entry) => entry.quantity > 0)
+    );
+  };
+
+  const handleRemoveItem = (itemId: string) => {
+    setCart((prev) => prev.filter((entry) => entry.item.id !== itemId));
   };
 
   return (
@@ -56,14 +94,36 @@ export const App: React.FC = () => {
           <ProfilePage
             onSignOut={() => setCurrentScreen('login')}
             onViewAllHistory={() => setCurrentScreen('order-history')}
-            onOrderNow={() => setCurrentScreen('welcome')}
+            onOrderNow={() => setCurrentScreen('menu')}
           />
         )}
 
         {currentScreen === 'order-history' && (
           <OrderHistoryPage
             onBackToProfile={() => setCurrentScreen('profile')}
-            onOrderNow={() => setCurrentScreen('welcome')}
+            onOrderNow={() => setCurrentScreen('menu')}
+          />
+        )}
+
+        {currentScreen === 'menu' && (
+          <MainMenuPage
+            cart={cart}
+            onAddToCart={handleAddToCart}
+            onViewCart={() => setCurrentScreen('cart')}
+          />
+        )}
+
+        {currentScreen === 'cart' && (
+          <CartPage
+            cart={cart}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveItem}
+            onBack={() => setCurrentScreen('menu')}
+            onProceedToPayment={() => {
+              setCurrentScreen('welcome');
+              setDiningOption(null);
+              setCart(INITIAL_CART_ITEMS);
+            }}
           />
         )}
       </div>
