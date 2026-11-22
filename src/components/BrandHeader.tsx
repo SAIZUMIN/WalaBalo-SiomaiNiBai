@@ -51,13 +51,13 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
 
       <div className="brand-lockup">
         <img
-          src="/assets/Frame 45.png"
-          alt="Siomai basket logo"
+          src="/assets/logo.png"
+          alt="SIOBAI logo"
           className="brand-logo-img"
         />
         <div className="brand-text">
-          <span className="brand-title">SIOMAI</span>
-          <span className="brand-subtitle">Delicious &amp; Affordable</span>
+          <span className="brand-title">SIOBAI</span>
+          <span className="brand-subtitle">SIOMAI BY BAI, FOR BAI</span>
         </div>
       </div>
     </header>
