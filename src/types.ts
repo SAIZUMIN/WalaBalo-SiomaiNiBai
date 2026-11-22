@@ -8,7 +8,10 @@ export type ScreenName =
   | 'cart'
   | 'payment-option'
   | 'ewallet'
-  | 'pay-counter';
+  | 'pay-counter'
+  | 'success-counter'
+  | 'success-ewallet'
+  | 'thank-you';
 
 export type DiningOption = 'DINE IN' | 'TAKE OUT';
 

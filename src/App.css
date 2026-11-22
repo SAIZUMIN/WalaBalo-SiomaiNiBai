@@ -1693,3 +1693,361 @@ button {
 .payment-bottom-btn:hover {
   background-color: var(--color-primary-hover);
 }
+
+
+/* ==========================================
+   PAGES 11, 12 & 13: SUCCESS (COUNTER / E-WALLET) & THANK YOU
+   ========================================== */
+.success-screen {
+  background-color: #5b0607;
+  color: #ffffff;
+}
+
+.success-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.success-content,
+.thankyou-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6.5cqh 8cqw 5cqh;
+}
+
+.thankyou-content {
+  padding-top: 9cqh;
+}
+
+.success-top-title {
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 3cqh;
+  animation: fadeSlideDown 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Animated Checkmark Emblem */
+.animated-check-wrap {
+  position: relative;
+  width: 24.5cqw;
+  height: 24.5cqw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2.6cqh;
+}
+
+.animated-check-wrap--thankyou {
+  width: 26cqw;
+  height: 26cqw;
+  margin-bottom: 3.4cqh;
+}
+
+.check-pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: rgba(168, 28, 30, 0.45);
+  pointer-events: none;
+  animation: checkPulseRing 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.check-pulse-ring--2 {
+  animation-delay: 0.75s;
+}
+
+.check-outer-circle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(145, 22, 24, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  animation: checkPopIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.check-inner-circle {
+  width: 53%;
+  height: 53%;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+}
+
+.check-svg-icon {
+  width: 64%;
+  height: 64%;
+}
+
+.check-draw-path {
+  stroke-dasharray: 32;
+  stroke-dashoffset: 32;
+  animation: drawCheckmark 0.48s cubic-bezier(0.65, 0, 0.35, 1) 0.28s forwards;
+}
+
+/* Status Copy Below Checkmark */
+.success-status-block {
+  text-align: center;
+  margin-bottom: 2.8cqh;
+  animation: thankYouReveal 0.5s ease-out 0.18s both;
+}
+
+.success-counter-note {
+  font-size: var(--fs-body);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.45;
+}
+
+.success-ewallet-title {
+  font-size: 4.9cqw;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.6cqh;
+}
+
+.success-ewallet-note {
+  font-size: var(--fs-meta);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Order Ticket Card */
+.success-ticket-card {
+  width: 77cqw;
+  background-color: #ffffff;
+  border-radius: 3.8cqw 3.8cqw 0 0;
+  padding: 2.6cqh 4.8cqw 2.4cqh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
+  animation: ticketSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
+}
+
+.success-ticket-header {
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  margin-bottom: 1.2cqh;
+}
+
+.success-ticket-card--counter .success-ticket-header {
+  color: #8c3b3c;
+}
+
+.success-ticket-card--ewallet .success-ticket-header {
+  color: #4a4845;
+}
+
+.success-ticket-number {
+  font-size: 10.6cqw;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.2cqh;
+}
+
+.success-ticket-card--counter .success-ticket-number {
+  color: var(--color-primary);
+}
+
+.success-ticket-card--ewallet .success-ticket-number {
+  color: #0f0f0f;
+}
+
+.success-ticket-status {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  margin-bottom: 2.2cqh;
+}
+
+.success-ticket-card--counter .success-ticket-status {
+  color: var(--color-primary);
+}
+
+.success-ticket-card--ewallet .success-ticket-status {
+  color: #1a1a1a;
+}
+
+.success-ticket-divider {
+  width: calc(100% + 9.6cqw);
+  border-top: 1.2px solid #ece8e1;
+  margin-bottom: 1.6cqh;
+}
+
+.success-ticket-amount-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs-body);
+  font-weight: 500;
+  margin-bottom: 1.4cqh;
+}
+
+.success-ticket-card--counter .success-ticket-amount-row {
+  color: #8c3b3c;
+}
+
+.success-ticket-card--ewallet .success-ticket-amount-row {
+  color: #262422;
+}
+
+.success-ticket-price {
+  font-weight: 600;
+}
+
+.success-ticket-points {
+  font-size: var(--fs-meta);
+  font-weight: 700;
+}
+
+.success-ticket-card--counter .success-ticket-points {
+  color: #8c2324;
+}
+
+.success-ticket-card--ewallet .success-ticket-points {
+  color: #1a1a1a;
+}
+
+/* Done & Back to Home Buttons */
+.success-done-btn,
+.thankyou-home-btn {
+  margin-top: auto;
+  height: 7.4cqh;
+  background-color: #7d1a1c;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3cqw;
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.success-done-btn {
+  width: 64cqw;
+}
+
+.thankyou-home-btn {
+  width: 78cqw;
+  font-size: var(--fs-body);
+}
+
+.success-done-btn:hover,
+.thankyou-home-btn:hover {
+  background-color: #931f21;
+  transform: translateY(-2px);
+}
+
+/* Thank You Unified Text Block */
+.thankyou-text-block {
+  text-align: center;
+  animation: thankYouReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+.thankyou-heading {
+  font-size: 6.4cqw;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.24;
+  margin-bottom: 1.4cqh;
+}
+
+.thankyou-subtitle {
+  font-size: var(--fs-body);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Keyframe Animations for Checkmark & Thank You */
+@keyframes checkPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes drawCheckmark {
+  0% {
+    stroke-dashoffset: 32;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes checkPulseRing {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.75;
+  }
+  70% {
+    transform: scale(1.42);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.42);
+    opacity: 0;
+  }
+}
+
+@keyframes ticketSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes thankYouReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

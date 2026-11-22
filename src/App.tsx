@@ -9,6 +9,8 @@ import { CartPage } from './components/CartPage';
 import { PaymentOptionPage } from './components/PaymentOptionPage';
 import { EWalletPage } from './components/EWalletPage';
 import { PayAtCounterPage } from './components/PayAtCounterPage';
+import { SuccessPage } from './components/SuccessPage';
+import { ThankYouPage } from './components/ThankYouPage';
 import {
   CartItem,
   DiningOption,
@@ -26,6 +28,7 @@ export const App: React.FC = () => {
   const [loyaltyPoints, setLoyaltyPoints] = useState<number>(100);
   const [useRewardPoints, setUseRewardPoints] = useState<boolean>(false);
   const [cart, setCart] = useState<CartItem[]>(INITIAL_CART_ITEMS);
+  const [queueNum, setQueueNum] = useState<number>(42);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const triggerToast = (msg: string) => {
@@ -114,6 +117,7 @@ export const App: React.FC = () => {
     setCart(INITIAL_CART_ITEMS);
     setUseRewardPoints(false);
     setLoyaltyPoints(100);
+    setQueueNum((prev) => prev + 1);
   };
 
   const subtotal = cart.reduce(
@@ -122,6 +126,9 @@ export const App: React.FC = () => {
   );
   const discount =
     useRewardPoints && loyaltyPoints >= 50 && subtotal >= 10 ? 10 : 0;
+  const totalAmount = Math.max(0, subtotal - discount);
+  const pointsEarned = Math.max(1, Math.floor(totalAmount / 10));
+  const formattedQueue = String(queueNum).padStart(3, '0');
 
   return (
     <div className="kiosk-viewport">
@@ -225,7 +232,7 @@ export const App: React.FC = () => {
             discount={discount}
             onBack={() => setCurrentScreen('payment-option')}
             onChangePaymentMethod={() => setCurrentScreen('payment-option')}
-            onCompletePayment={handleResetOrder}
+            onCompletePayment={() => setCurrentScreen('success-ewallet')}
           />
         )}
 
@@ -234,8 +241,32 @@ export const App: React.FC = () => {
             cart={cart}
             discount={discount}
             onBack={() => setCurrentScreen('payment-option')}
-            onProceedToCounter={handleResetOrder}
+            onProceedToCounter={() => setCurrentScreen('success-counter')}
           />
+        )}
+
+        {currentScreen === 'success-counter' && (
+          <SuccessPage
+            mode="counter"
+            queueNumber={formattedQueue}
+            totalAmount={totalAmount}
+            pointsEarned={pointsEarned}
+            onDone={() => setCurrentScreen('thank-you')}
+          />
+        )}
+
+        {currentScreen === 'success-ewallet' && (
+          <SuccessPage
+            mode="ewallet"
+            queueNumber={formattedQueue}
+            totalAmount={totalAmount}
+            pointsEarned={pointsEarned}
+            onDone={() => setCurrentScreen('thank-you')}
+          />
+        )}
+
+        {currentScreen === 'thank-you' && (
+          <ThankYouPage onBackToHome={handleResetOrder} />
         )}
       </div>
     </div>
