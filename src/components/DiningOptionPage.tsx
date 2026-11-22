@@ -3,8 +3,8 @@ import { BrandHeader } from './BrandHeader';
 import { DiningOption } from '../types';
 
 interface DiningOptionPageProps {
-  selectedOption: DiningOption;
-  onSelectOption: (option: 'DINE IN' | 'TAKE OUT') => void;
+  selectedOption: DiningOption | null;
+  onSelectOption: (option: DiningOption) => void;
   onBack: () => void;
 }
 
@@ -27,7 +27,9 @@ export const DiningOptionPage: React.FC<DiningOptionPageProps> = ({
         <div className="dining-cards">
           <button
             type="button"
-            className={`dining-card ${selectedOption === 'DINE IN' ? 'dining-card--selected' : ''}`}
+            className={`dining-card ${
+              selectedOption === 'DINE IN' ? 'dining-card--selected' : ''
+            }`}
             onClick={() => onSelectOption('DINE IN')}
           >
             <div className="dining-icon-box" aria-hidden="true">
@@ -45,7 +47,9 @@ export const DiningOptionPage: React.FC<DiningOptionPageProps> = ({
 
           <button
             type="button"
-            className={`dining-card ${selectedOption === 'TAKE OUT' ? 'dining-card--selected' : ''}`}
+            className={`dining-card ${
+              selectedOption === 'TAKE OUT' ? 'dining-card--selected' : ''
+            }`}
             onClick={() => onSelectOption('TAKE OUT')}
           >
             <div className="dining-icon-box" aria-hidden="true">

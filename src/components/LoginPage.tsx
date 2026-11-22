@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrandHeader } from './BrandHeader';
+import { DiningOption } from '../types';
 
 interface LoginPageProps {
+  diningOption: DiningOption;
   onScanSignIn: () => void;
   onSkipSignIn: () => void;
   onBack: () => void;
 }
 
-// Exact 13x13 module matrix matching the reference QR graphic
 const QR_MATRIX: number[][] = [
   [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
@@ -48,7 +49,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               onScanSignIn();
             }
           }}
-          title="Click to simulate scanning your loyalty QR code"
+          title="Tap to simulate scanning your loyalty QR code"
         >
           <svg
             className="qr-code-svg"

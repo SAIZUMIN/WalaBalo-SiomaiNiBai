@@ -4,11 +4,13 @@ import { ORDER_HISTORY_ITEMS } from '../types';
 
 interface OrderHistoryPageProps {
   onBackToProfile: () => void;
+  onReorderItem: (menuItemId: string, itemName: string) => void;
   onOrderNow: () => void;
 }
 
 export const OrderHistoryPage: React.FC<OrderHistoryPageProps> = ({
   onBackToProfile,
+  onReorderItem,
   onOrderNow,
 }) => {
   return (
@@ -27,7 +29,14 @@ export const OrderHistoryPage: React.FC<OrderHistoryPageProps> = ({
 
         <div className="history-list history-list--expanded">
           {ORDER_HISTORY_ITEMS.map((item) => (
-            <div key={item.id} className="history-item history-item--expanded">
+            <div
+              key={item.id}
+              className="history-item history-item--expanded"
+              onClick={() => onReorderItem(item.menuItemId, item.name)}
+              role="button"
+              tabIndex={0}
+              title={`Tap to add ${item.name} to cart`}
+            >
               <img
                 src={item.image}
                 alt={item.name}

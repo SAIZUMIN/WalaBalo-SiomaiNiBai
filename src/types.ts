@@ -5,18 +5,21 @@ export type ScreenName =
   | 'profile'
   | 'order-history'
   | 'menu'
-  | 'cart';
+  | 'cart'
+  | 'payment-option'
+  | 'ewallet'
+  | 'pay-counter';
 
-export type DiningOption = 'DINE IN' | 'TAKE OUT' | null;
+export type DiningOption = 'DINE IN' | 'TAKE OUT';
 
-export type MenuCategory = 'siomai' | 'drinks';
+export type MenuCategory = 'all' | 'siomai' | 'drinks';
 
 export interface MenuItem {
   id: string;
   name: string;
-  subtitle?: string;
+  subtitle: string;
   price: number;
-  category: MenuCategory;
+  category: 'siomai' | 'drinks';
   image: string;
 }
 
@@ -27,7 +30,9 @@ export interface CartItem {
 
 export interface OrderHistoryItem {
   id: string;
+  menuItemId: string;
   name: string;
+  subtitle: string;
   price: string;
   image: string;
 }
@@ -66,8 +71,49 @@ export const MENU_ITEMS: MenuItem[] = [
     image: '/assets/spicy_siomai.png',
   },
   {
+    id: 'pork-8',
+    name: 'Pork Platter',
+    subtitle: '8 pcs.',
+    price: 65,
+    category: 'siomai',
+    image: '/assets/pork_siomai.png',
+  },
+  {
+    id: 'beef-8',
+    name: 'Beef Platter',
+    subtitle: '8 pcs.',
+    price: 65,
+    category: 'siomai',
+    image: '/assets/beef_siomai.png',
+  },
+  {
+    id: 'spicy-8',
+    name: 'Spicy Platter',
+    subtitle: '8 pcs.',
+    price: 65,
+    category: 'siomai',
+    image: '/assets/spicy_siomai.png',
+  },
+  {
+    id: 'chicken-8',
+    name: 'Chicken Platter',
+    subtitle: '8 pcs.',
+    price: 65,
+    category: 'siomai',
+    image: '/assets/chicken_siomai.png',
+  },
+  {
+    id: 'family-box',
+    name: 'Barkada Box',
+    subtitle: '16 pcs.',
+    price: 125,
+    category: 'siomai',
+    image: '/assets/pork_siomai.png',
+  },
+  {
     id: 'coke',
     name: 'Coke',
+    subtitle: '237ml',
     price: 15,
     category: 'drinks',
     image: '/assets/coke.png',
@@ -75,6 +121,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: 'royal',
     name: 'Royal',
+    subtitle: '237ml',
     price: 15,
     category: 'drinks',
     image: '/assets/royal.png',
@@ -82,6 +129,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: 'sprite',
     name: 'Sprite',
+    subtitle: '237ml',
     price: 15,
     category: 'drinks',
     image: '/assets/sprite.png',
@@ -89,9 +137,26 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: 'pepsi',
     name: 'Pepsi',
+    subtitle: '237ml',
     price: 15,
     category: 'drinks',
     image: '/assets/pepsi.png',
+  },
+  {
+    id: 'coke-large',
+    name: 'Coke Sakto Duo',
+    subtitle: '2 Bottles',
+    price: 28,
+    category: 'drinks',
+    image: '/assets/coke.png',
+  },
+  {
+    id: 'sprite-large',
+    name: 'Sprite Duo',
+    subtitle: '2 Bottles',
+    price: 28,
+    category: 'drinks',
+    image: '/assets/sprite.png',
   },
 ];
 
@@ -99,31 +164,39 @@ export const INITIAL_CART_ITEMS: CartItem[] = [
   { item: MENU_ITEMS[0], quantity: 1 }, // Pork Siomai
   { item: MENU_ITEMS[2], quantity: 1 }, // Beef Siomai
   { item: MENU_ITEMS[1], quantity: 1 }, // Chicken Siomai
-  { item: MENU_ITEMS[4], quantity: 1 }, // Coke
+  { item: MENU_ITEMS[9], quantity: 1 }, // Coke
 ];
 
 export const ORDER_HISTORY_ITEMS: OrderHistoryItem[] = [
   {
-    id: 'pork',
+    id: 'hist-pork',
+    menuItemId: 'pork',
     name: 'Pork Siomai',
+    subtitle: '4 pcs.',
     price: '- ₱35.00',
     image: '/assets/pork_siomai.png',
   },
   {
-    id: 'beef',
+    id: 'hist-beef',
+    menuItemId: 'beef',
     name: 'Beef Siomai',
+    subtitle: '4 pcs.',
     price: '- ₱35.00',
     image: '/assets/beef_siomai.png',
   },
   {
-    id: 'spicy',
+    id: 'hist-spicy',
+    menuItemId: 'spicy',
     name: 'Spicy Siomai',
+    subtitle: '4 pcs.',
     price: '- ₱35.00',
     image: '/assets/spicy_siomai.png',
   },
   {
-    id: 'chicken',
+    id: 'hist-chicken',
+    menuItemId: 'chicken',
     name: 'Chicken Siomai',
+    subtitle: '4 pcs.',
     price: '- ₱35.00',
     image: '/assets/chicken_siomai.png',
   },

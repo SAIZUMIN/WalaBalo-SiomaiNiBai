@@ -1,27 +1,51 @@
 import React, { useState } from 'react';
-import { CartItem, MENU_ITEMS, MenuCategory, MenuItem } from '../types';
+import {
+  CartItem,
+  DiningOption,
+  MENU_ITEMS,
+  MenuItem,
+} from '../types';
 
 interface MainMenuPageProps {
   cart: CartItem[];
+  diningOption: DiningOption;
+  isSignedIn: boolean;
+  loyaltyPoints: number;
+  onToggleDiningOption: () => void;
+  onAccountClick: () => void;
+  onBack: () => void;
   onAddToCart: (item: MenuItem) => void;
+  onUpdateQuantity: (itemId: string, delta: number) => void;
   onViewCart: () => void;
 }
 
 export const MainMenuPage: React.FC<MainMenuPageProps> = ({
   cart,
+  diningOption,
+  onToggleDiningOption,
+  onBack,
   onAddToCart,
   onViewCart,
 }) => {
-  const [activeCategory, setActiveCategory] = useState<MenuCategory>('siomai');
+  const [activeCategory, setActiveCategory] = useState<'siomai' | 'drinks'>('siomai');
   const [searchQuery, setSearchQuery] = useState('');
 
+  const isSearching = searchQuery.trim().length > 0;
+
   const filteredItems = MENU_ITEMS.filter((item) => {
-    const matchesCategory = item.category === activeCategory;
     const matchesSearch = item.name
       .toLowerCase()
       .includes(searchQuery.trim().toLowerCase());
-    return matchesCategory && matchesSearch;
+    if (isSearching) {
+      return matchesSearch;
+    }
+    return item.category === activeCategory;
   });
+
+  const getItemQuantity = (itemId: string): number => {
+    const found = cart.find((entry) => entry.item.id === itemId);
+    return found ? found.quantity : 0;
+  };
 
   const totalItems = cart.reduce((sum, entry) => sum + entry.quantity, 0);
   const totalPrice = cart.reduce(
@@ -32,6 +56,29 @@ export const MainMenuPage: React.FC<MainMenuPageProps> = ({
   return (
     <div className="kiosk-screen light-screen">
       <main className="menu-content">
+        {/* Clean, minimal top navigation bar */}
+        <div className="menu-status-bar">
+          <button
+            type="button"
+            className="menu-back-chip"
+            onClick={onBack}
+            aria-label="Go back"
+          >
+            <span aria-hidden="true">←</span>
+            <span>Back</span>
+          </button>
+
+          <button
+            type="button"
+            className="menu-context-pill"
+            onClick={onToggleDiningOption}
+            title="Tap to switch between Dine In and Take Out"
+          >
+            <span>{diningOption}</span>
+            <span className="context-pill-swap" aria-hidden="true">⇄</span>
+          </button>
+        </div>
+
         {/* Search Input Bar */}
         <div className="menu-search-bar">
           <svg
@@ -62,6 +109,16 @@ export const MainMenuPage: React.FC<MainMenuPageProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="Search Items"
           />
+          {isSearching && (
+            <button
+              type="button"
+              className="menu-search-clear"
+              onClick={() => setSearchQuery('')}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
         </div>
 
         {/* Category Tabs */}
@@ -71,9 +128,12 @@ export const MainMenuPage: React.FC<MainMenuPageProps> = ({
             role="tab"
             aria-selected={activeCategory === 'siomai'}
             className={`menu-tab ${
-              activeCategory === 'siomai' ? 'menu-tab--active' : ''
+              activeCategory === 'siomai' && !isSearching ? 'menu-tab--active' : ''
             }`}
-            onClick={() => setActiveCategory('siomai')}
+            onClick={() => {
+              setActiveCategory('siomai');
+              setSearchQuery('');
+            }}
           >
             Siomai
           </button>
@@ -82,68 +142,100 @@ export const MainMenuPage: React.FC<MainMenuPageProps> = ({
             role="tab"
             aria-selected={activeCategory === 'drinks'}
             className={`menu-tab ${
-              activeCategory === 'drinks' ? 'menu-tab--active' : ''
+              activeCategory === 'drinks' && !isSearching ? 'menu-tab--active' : ''
             }`}
-            onClick={() => setActiveCategory('drinks')}
+            onClick={() => {
+              setActiveCategory('drinks');
+              setSearchQuery('');
+            }}
           >
             Drinks
           </button>
         </div>
 
-        {/* 2x2 Product Grid */}
-        <div className="menu-grid">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="menu-card">
-              <div className="menu-card-img-box">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className={`menu-card-img ${
-                    item.category === 'drinks'
-                      ? 'menu-card-img--drink'
-                      : 'menu-card-img--siomai'
-                  }`}
-                />
-              </div>
-
-              <div className="menu-card-info">
-                <h3 className="menu-card-title">{item.name}</h3>
-                <p className="menu-card-subtitle">
-                  {item.subtitle ? item.subtitle : '\u00A0'}
-                </p>
-              </div>
-
-              <div className="menu-card-footer">
-                <span className="menu-card-price">
-                  ₱ {item.price.toFixed(2)}
-                </span>
-                <button
-                  type="button"
-                  className="menu-add-btn"
-                  onClick={() => onAddToCart(item)}
-                  aria-label={`Add ${item.name} to cart`}
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="menu-add-icon"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M12 5V19M5 12H19"
-                      stroke="#FFFFFF"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </button>
-              </div>
+        {/* Scrollable 3-Column Product Grid */}
+        <div className="menu-grid-scroll">
+          {filteredItems.length === 0 ? (
+            <div className="menu-empty-search">
+              <p className="menu-empty-title">No items found</p>
+              <button
+                type="button"
+                className="menu-empty-reset"
+                onClick={() => setSearchQuery('')}
+              >
+                Reset search
+              </button>
             </div>
-          ))}
+          ) : (
+            <div className="menu-grid">
+              {filteredItems.map((item) => {
+                const qty = getItemQuantity(item.id);
+                return (
+                  <div
+                    key={item.id}
+                    className={`menu-card ${qty > 0 ? 'menu-card--in-cart' : ''}`}
+                  >
+                    <div className="menu-card-img-box">
+                      {qty > 0 && (
+                        <span className="menu-card-qty-dot">{qty}</span>
+                      )}
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className={`menu-card-img ${
+                          item.category === 'drinks'
+                            ? 'menu-card-img--drink'
+                            : 'menu-card-img--siomai'
+                        }`}
+                      />
+                    </div>
+
+                    <div className="menu-card-info">
+                      <h3 className="menu-card-title">{item.name}</h3>
+                      <p className="menu-card-subtitle">{item.subtitle}</p>
+                    </div>
+
+                    <div className="menu-card-footer">
+                      <span className="menu-card-price">
+                        ₱{item.price.toFixed(2)}
+                      </span>
+                      <button
+                        type="button"
+                        className="menu-add-btn"
+                        onClick={() => onAddToCart(item)}
+                        aria-label={`Add ${item.name} to cart`}
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          className="menu-add-icon"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M12 5V19M5 12H19"
+                            stroke="#FFFFFF"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Bottom Cart Summary Bar */}
-        <div className="menu-cart-bar">
+        <div
+          className="menu-cart-bar"
+          onClick={() => {
+            if (totalItems > 0) onViewCart();
+          }}
+          role="region"
+          aria-label="Cart summary"
+        >
           <div className="menu-cart-left">
             <svg
               viewBox="0 0 24 24"
@@ -171,7 +263,10 @@ export const MainMenuPage: React.FC<MainMenuPageProps> = ({
             <button
               type="button"
               className="view-cart-btn"
-              onClick={onViewCart}
+              onClick={(e) => {
+                e.stopPropagation();
+                onViewCart();
+              }}
             >
               <span>View Cart</span>
               <span aria-hidden="true">→</span>
